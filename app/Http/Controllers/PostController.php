@@ -45,11 +45,36 @@ class PostController extends Controller
 
     public function delete(Post $postID)
     {
-        if (auth()->user()->cannot('delete', $postID)) {
-            return 'Cannot';
-        }
+        // if (auth()->user()->cannot('delete', $postID)) {
+        //     return 'Cannot';
+        // }
         $postID->delete();
         return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfully deleted.');
     }
 
+    public function showEditForm(Post $postID) {
+        return view('edit-post', ['post'=>$postID]);
+    }
+    public function updateForm(Post $postID, Request $request) {
+        $incomingFields = $request->validate(
+            [
+
+                'title' => ['required'],
+                'body' => ['required']
+            ]
+
+        );
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $postID -> update($incomingFields);
+
+        return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfully updated.');
+
+    }
+
+    public function search($term) {
+        $posts = Post::search($term)->get();
+        return $posts->load('user:id,username,avatar');
+    }
 }

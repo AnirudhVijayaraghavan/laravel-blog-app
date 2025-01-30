@@ -6,7 +6,7 @@ body,
 }
 
 .header-bar {
-  background-color: #f9322c;
+  background-color: hsl(207, 100%, 50%);
 }
 
 .container--narrow {

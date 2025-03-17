@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Cache;
+use App\Models\Post;
 use App\Models\User;
 use App\Models\Follow;
+use App\Events\ExampleEvent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\View;
@@ -63,6 +66,7 @@ class UserController extends Controller
             )
         ) {
             $request->session()->regenerate();
+            event(new ExampleEvent(['username' => auth()->user()->username, 'action' => 'login']));
             return redirect('/')->with('success', 'You have successfully logged in.');
         } else {
             return redirect('/')->with('failure', 'Incorrect login attempt.');
@@ -70,9 +74,34 @@ class UserController extends Controller
         //User::create($outgoingFields);
         //return 'hello';
     }
+    public function loginApi(Request $request)
+    {
+        $outgoingFields = $request->validate(
+            [
+
+                'username' => ['required'],
+                'password' => ['required']
+            ]
+        );
+        if (
+            auth()->attempt($outgoingFields)
+        ) {
+            $user = User::where('username', $outgoingFields['username'])->first();
+            $token = $user->createToken('bloggertoken')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Authorized',
+                'data' => $token, // optional data
+            ], 200);
+        } else {
+            return response('Unauthorized', 401);
+        }
+    }
     public function logout()
     {
+        event(new ExampleEvent(['username' => auth()->user()->username, 'action' => 'logout']));
         auth()->logout();
+
         return redirect('/')->with('success', 'You have successfully logged out.');
     }
 
@@ -81,7 +110,12 @@ class UserController extends Controller
         if (auth()->check()) {
             return view('homepage-feed', ['feedPosts' => auth()->user()->feedPosts()->latest()->paginate(2)]);
         } else {
-            return view('homeguest');
+            $postCount = Cache::remember('postCount', 20, function () {
+                return Post::count();
+            });
+            return view('homeguest', [
+                'postCount' => $postCount
+            ]);
         }
     }
 

@@ -29,17 +29,23 @@
 <body>
     <header class="header-bar mb-3">
         <div class="container d-flex flex-column flex-md-row align-items-center p-3">
-            <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-white">Blogger</a></h4>
+            <h4 class="my-0 mr-md-auto font-weight-normal"><a wire:navigate href="/"
+                    class="text-white">Blogger</a></h4>
             @auth
                 <div class="flex-row my-3 my-md-0">
-                    <a href="#" class="text-white mr-2 header-search-icon" title="Search" data-toggle="tooltip"
-                        data-placement="bottom"><i class="fas fa-search"></i></a>
-                    <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip"
-                        data-placement="bottom"><i class="fas fa-comment"></i></span>
-                    <a href="/profile/{{ auth()->user()->username }}" class="mr-2"><img title="My Profile"
+                    @persist('headerdynamic')
+                        <livewire:search />
+                        <livewire:chat />
+                        {{-- <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip"
+                            data-placement="bottom">
+                            <i class="fas fa-comment"></i></span> --}}
+                    @endpersist
+
+
+                    <a wire:navigate href="/profile/{{ auth()->user()->username }}" class="mr-2"><img title="My Profile"
                             data-toggle="tooltip" data-placement="bottom"
                             style="width: 32px; height: 32px; border-radius: 16px" src="{{ auth()->user()->avatar }}" /></a>
-                    <a class="btn btn-sm btn-success mr-2" href="/create-post">Create Post</a>
+                    <a wire:navigate class="btn btn-sm btn-success mr-2" href="/create-post">Create Post</a>
                     <form action="/logout" method="POST" class="d-inline">
                         @csrf
                         <button class="btn btn-sm btn-secondary">Sign Out</button>
@@ -87,7 +93,9 @@
         <p class="m-0">Copyright &copy; {{ date('Y') }} <a href="/" class="text-muted">OurApp</a>. All
             rights reserved.</p>
     </footer>
-
+    {{-- <div data-username="{{ auth()->user()->username }}" data-avatar="{{ auth()->user()->avatar }}" id="chat-wrapper"
+        class="chat-wrapper shadow border-top border-left border-right">
+    </div> --}}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>

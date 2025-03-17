@@ -4,7 +4,7 @@
             <h2>{{ $postID->title }}</h2>
             @can('update', $postID)
                 <span class="pt-2">
-                    <a href="/post/{{ $postID->id }}/edit" class="text-primary mr-2" data-toggle="tooltip"
+                    <a wire:navigate href="/post/{{ $postID->id }}/edit" class="text-primary mr-2" data-toggle="tooltip"
                         data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
                     <form class="delete-post-form d-inline" action="/post/{{ $postID->id }}" method="POST">
                         @csrf
@@ -17,7 +17,7 @@
         </div>
 
         <p class="text-muted small mb-4">
-            <a href="/profile/{{$postID->user->username}}"><img class="avatar-tiny"
+            <a wire:navigate href="/profile/{{$postID->user->username}}"><img class="avatar-tiny"
                     src="{{$postID->user->avatar}}" /></a>
             Posted by <a href="/profile/{{$postID->user->username}}">{{ $postID->user->username }}</a> on {{ $postID->created_at->format('n/j/Y') }}
         </p>

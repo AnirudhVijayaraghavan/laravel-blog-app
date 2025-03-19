@@ -1,9 +1,9 @@
-# shorty.anirudhvijay.xyz
+# blogger.anirudhvijay.xyz
 <hr>
 
-## A simple URL shortener built on Laravel to try out some system design concepts.
+## A simple blogging website built on Laravel to try out some system design concepts.
 
-### This site is hosted live at : https://shorty.anirudhvijay.xyz. Be sure to check out my other blogging app at : https://blogger.anirudhvijay.xyz
+### This site is hosted live at : https://blogger.anirudhvijay.xyz. Be sure to check out my URL Shortening app at : https://shorty.anirudhvijay.xyz
 
 <hr>
 
